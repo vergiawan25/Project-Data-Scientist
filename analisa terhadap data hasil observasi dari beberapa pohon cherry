@@ -1,0 +1,37 @@
+#Load library dan load dataset dengan nama “trees_df”, adapun library yang diperlukan yaitu readr
+library(readr)
+trees_df <- read.csv("https://storage.googleapis.com/dqlab-dataset/trees.csv")
+
+#Mengecek Struktur Data
+names(trees_df)
+str(trees_df)
+names(trees_df)[1]<- "Diameter"
+trees_df$diameter_ft<-trees_df$diameter*0.08333
+head(trees_df)
+summary(trees_df)
+is.na(trees_df)
+
+#mengevaluasi normality dari setiap variabel
+shapiro.test(trees_df$diameter_ft)
+shapiro.test(trees_df$Height)
+shapiro.test(trees_df$Volume)
+
+#Buatlah visualisasi sederhana yang menjelaskan distribusi Volume dari dataset 
+plot(density(trees_df$Volume))
+
+#Bagaimanakah hubungan antara Volume batang pohon Cherry dengan diameter dan ketinggian (height)?
+lm(formula = Volume ~ Height+diameter_ft, data = trees_df)
+plot(trees_df$diameter_ft, trees_df$Volume)
+plot(trees_df$Height, trees_df$Volume)
+
+#menganalisa efek pemberian obat tidur terhadap peningkatan lamanya waktu tidur dari sekelompok mahasiswa
+library(readr)
+library(dplyr)
+sleep_df <- read_csv('https://storage.googleapis.com/dqlab-dataset/sleep.csv')
+group1 <- filter(sleep_df, sleep_df$group == 1)
+group2 <- filter(sleep_df, sleep_df$group == 2)
+t_test <- t.test(group1$extra, group2$extra)
+
+#Menghasilkan Grafik - Boxplot
+library(ggplot2)
+ggplot(sleep_df, aes(x=as.character(group), y=extra, fill=as.character(group))) + geom_boxplot()
